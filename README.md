@@ -60,15 +60,9 @@ Move `mDWaveMenu` to your resources folder and add `start mDWaveMenu` to `server
 
 `add_ace group.admin wave.openmenu allow`
 
-===================================================
+=============================================
 **NOTE:** **Do not rename the resouce**
 
-⬇️ **Download:**
-
-Get it from [GitHub](https://github.com/mosheba1/mDWaveMenu)
-
-Direct  Download
-[mDWaveMenu.rar|attachment](upload://ua3hOHduMzkXUk8t0Qfpxlj8trk.rar) (48.8 KB)
 
 **Preview**  📸
 ![Screenshot 2022-03-19 115210|669x487, 50%](upload://fGy8Tn8U5rhMuHlzaY5p8R1POse.png)
