@@ -22,10 +22,10 @@ Config.Logs = {
 Config.Admin_Vehicles = {
     [1] = {
          name = "Bugatti Divo 2019",
-         id = "divo",   
+         spawncode = "divo",   
      },
     [2] = {
          name = "Bus",
-         id = "bus"
+         spawncode = "bus"
      },	
  }
