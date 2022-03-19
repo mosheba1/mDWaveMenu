@@ -229,13 +229,13 @@ while true do
         if values.name == "Bus" then
           timers.bus = cooldowns.bus
         end
-        RequestModel(GetHashKey(values.id))
-        while not HasModelLoaded(GetHashKey(values.id)) do
+        RequestModel(GetHashKey(values.spawncode))
+        while not HasModelLoaded(GetHashKey(values.spawncode)) do
           Citizen.Wait(100)
         end
         local playerPed = PlayerPedId()
         local pos = GetEntityCoords(playerPed)
-        local vehicle = CreateVehicle(GetHashKey(values.id), pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
+        local vehicle = CreateVehicle(GetHashKey(values.spawncode), pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
         SetPedIntoVehicle(playerPed, vehicle, -1)
         TriggerServerEvent('mDWaveMenu:discordlogs', "Spawned Vehicle", "Spawn Vehicle Action Used", "Hello, there is a new action been made using wave menu", playernamelogs, "Spawned Vehicle: "..values.name, 56108)
         if lastvehic ~= nil then
