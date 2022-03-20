@@ -38,7 +38,12 @@ end
 
 RegisterServerEvent('mDWaveMenu:kickplayer')
 AddEventHandler('mDWaveMenu:kickplayer', function(player, reason)
-    DropPlayer(player, reason)
+    local source = source 
+    if isPlayerAdmin(source) then 
+        DropPlayer(player, reason)
+    else
+        print(GetPlayerName(source) .. " has triggered event mDWaveMenu:kickplayer without permission")
+    end
 end)
 
 
@@ -83,55 +88,60 @@ end;
 
 
 RegisterServerEvent('mDWaveMenu:banPlayer')
-AddEventHandler('mDWaveMenu:banPlayer', function(source, reason)
-    local waveBanList = LoadResourceFile(GetCurrentResourceName(), "wave_bans.json")
-    if waveBanList ~= nil then
-        local waveMagicTwo = json.decode(waveBanList)
-        if type(waveMagicTwo) == "table" then
-            local steamid = "Not Found"
-            local discord = "Not Found"
-            local license = "Not Found"
-            local live = "Not Found"
-            local xbl = "Not Found"
-            local C = GetPlayerEndpoint(source)
-            for _, n in ipairs(GetPlayerIdentifiers(source)) do
-                if n:match("steam") then
-                    steamid = n
-                elseif n:match("discord") then
-                    discord = n:gsub("discord:", "")
-                elseif n:match("license") then
-                    license = n
-                elseif n:match("live") then
-                    live = n
-                elseif n:match("xbl") then
-                    xbl = n
+AddEventHandler('mDWaveMenu:banPlayer', function(player, reason)
+    local source = source 
+    if isPlayerAdmin(source) then
+        local waveBanList = LoadResourceFile(GetCurrentResourceName(), "wave_bans.json")
+        if waveBanList ~= nil then
+            local waveMagicTwo = json.decode(waveBanList)
+            if type(waveMagicTwo) == "table" then
+                local steamid = "Not Found"
+                local discord = "Not Found"
+                local license = "Not Found"
+                local live = "Not Found"
+                local xbl = "Not Found"
+                local C = GetPlayerEndpoint(player)
+                for _, n in ipairs(GetPlayerIdentifiers(player)) do
+                    if n:match("steam") then
+                        steamid = n
+                    elseif n:match("discord") then
+                        discord = n:gsub("discord:", "")
+                    elseif n:match("license") then
+                        license = n
+                    elseif n:match("live") then
+                        live = n
+                    elseif n:match("xbl") then
+                        xbl = n
+                    end
                 end
-            end
-
-            if reason == nil then
-                reason = "Not Provided"
-            end
-            local banlist = {
-                ['steam'] = steamid,
-                ['discord'] = discord,
-                ['license'] = license,
-                ['live'] = live,
-                ['xbl'] = xbl,
-                ['ip'] = C,
-                ['token'] = GetPlayerToken(source, 0),
-                ['BanId'] = "#"..math.random(tonumber("1000"), tonumber("9999")).."",
-                ['Reason'] = reason
-            }
-            if not WaveBanTheSucker(source) then
-                table.insert(waveMagicTwo, banlist)
-                SaveResourceFile(GetCurrentResourceName(), "wave_bans.json", json.encode(waveMagicTwo, {indent = true}), tonumber("-1"))
-                DropPlayer(source, "[Wave Menu]: You have been banned off the server\n"..Config.Ban_Message.."\n\nReason: "..reason.. "\n\nPLEASE RECONNECT TO GET YOUR BAN ID AS IT'S NEEDED TO APPEAL THIS BAN ")
+    
+                if reason == nil then
+                    reason = "Not Provided"
+                end
+                local banlist = {
+                    ['steam'] = steamid,
+                    ['discord'] = discord,
+                    ['license'] = license,
+                    ['live'] = live,
+                    ['xbl'] = xbl,
+                    ['ip'] = C,
+                    ['token'] = GetPlayerToken(player, 0),
+                    ['BanId'] = "#"..math.random(tonumber("1000"), tonumber("9999")).."",
+                    ['Reason'] = reason
+                }
+                if not WaveBanTheSucker(player) then
+                    table.insert(waveMagicTwo, banlist)
+                    SaveResourceFile(GetCurrentResourceName(), "wave_bans.json", json.encode(waveMagicTwo, {indent = true}), tonumber("-1"))
+                    DropPlayer(player, "[Wave Menu]: You have been banned off the server\n"..Config.Ban_Message.."\n\nReason: "..reason.. "\n\nPLEASE RECONNECT TO GET YOUR BAN ID AS IT'S NEEDED TO APPEAL THIS BAN ")
+                end
+            else
+                waveBanListGenerator()
             end
         else
             waveBanListGenerator()
         end
     else
-        waveBanListGenerator()
+        print(GetPlayerName(source) .. " has triggered event mDWaveMenu:banPlayer without permission")
     end
 end)
 
@@ -251,11 +261,13 @@ end)
 
 msg = ""
 RegisterCommand('announce', function(source, args, user)
-    for i,v in pairs(args) do
-        msg = msg .. " " .. v
+    if isPlayerAdmin(source) then
+        for i,v in pairs(args) do
+            msg = msg .. " " .. v
+        end
+        TriggerClientEvent("announce", -1, msg)
+        msg = ""
     end
-    TriggerClientEvent("announce", -1, msg)
-    msg = ""
 end)
 
 
@@ -357,8 +369,3 @@ AddEventHandler('mDWaveMenu:discordlogs', function(name, action, message, fieldo
     if message == nil or message == '' then return FALSE end
     PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({ username = name,embeds = embeds}), { ['Content-Type'] = 'application/json' })
 end)
-
-
-
-
-
